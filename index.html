@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moroccan Taste - Authentic North African Cuisine in Hounslow</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: 'Roboto', sans-serif; 
+            font-family: 'Roboto', 'Amiri', sans-serif; 
             background: #F5F0E6; 
             color: #333; 
             line-height: 1.7; 
             overflow-x: hidden;
+            transition: background 0.5s ease;
         }
         h1, h2, h3 { font-family: 'Playfair Display', serif; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
@@ -82,7 +83,7 @@
         }
 
         /* Language Dropdown */
-        .lang-dropdown { position: relative; }
+        .lang-dropdown { position: relative; cursor: pointer; }
         .lang-dropdown-content { 
             display: none; 
             position: absolute; 
@@ -175,7 +176,7 @@
         /* Menu Section */
         .menu-section { 
             padding: 100px 0; 
-            background: #F5F0E6 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%23e8dccf" width="100" height="100"/><path d="M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z" fill="%23d9ccbc"/></svg>') repeat; 
+            background: #F5F0E6; 
             text-align: center; 
         }
         .menu-section h2 { 
@@ -301,7 +302,22 @@
         .back-to-top.visible { opacity: 1; visibility: visible; }
         .back-to-top:hover { transform: scale(1.1); }
 
-        /* Animations */
+        /* RTL for Arabic */
+        html[dir="rtl"] body { direction: rtl; text-align: right; }
+        html[dir="rtl"] .container { padding: 0 20px; }
+        html[dir="rtl"] .hero-split { flex-direction: row-reverse; }
+        html[dir="rtl"] nav ul { flex-direction: row-reverse; }
+        html[dir="rtl"] nav li { margin-right: 35px; margin-left: 0; }
+        html[dir="rtl"] .lang-dropdown-content { right: auto; left: 0; }
+        html[dir="rtl"] .map-split { flex-direction: row-reverse; }
+
+        /* Fade transition for content */
+        .lang-content { 
+            opacity: 1; 
+            transition: opacity 0.4s ease; 
+        }
+        .lang-content.fade { opacity: 0; }
+
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
@@ -316,25 +332,24 @@
     </style>
 </head>
 <body>
-
     <header id="header">
         <div class="container">
             <div class="logo">
                 <span class="logo-arabic">المذاق المغربي</span>
-                Moroccan Taste
+                <span class="logo-en">Moroccan Taste</span>
             </div>
             <div class="mobile-menu" onclick="toggleMenu()">☰</div>
             <nav>
                 <ul id="nav-menu">
-                    <li><a href="#menu">Menu</a></li>
-                    <li><a href="#delivery">Delivery & Takeaway</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li class="lang-dropdown">
-                        <a href="#" class="lang-current">EN</a>
+                    <li><a href="#menu" data-en="Menu" data-ar="القائمة" data-fr="Menu">Menu</a></li>
+                    <li><a href="#delivery" data-en="Delivery & Takeaway" data-ar="التوصيل والاستلام" data-fr="Livraison & À emporter">Delivery & Takeaway</a></li>
+                    <li><a href="#contact" data-en="Contact" data-ar="اتصل بنا" data-fr="Contact">Contact</a></li>
+                    <li class="lang-dropdown" id="langDropdown">
+                        <a href="#" class="lang-current" id="currentLang">EN</a>
                         <div class="lang-dropdown-content">
-                            <a href="#">EN - English</a>
-                            <a href="#">AR - العربية</a>
-                            <a href="#">FR - Français</a>
+                            <a href="#" onclick="switchLanguage('en')">EN - English</a>
+                            <a href="#" onclick="switchLanguage('ar')">AR - العربية</a>
+                            <a href="#" onclick="switchLanguage('fr')">FR - Français</a>
                         </div>
                     </li>
                 </ul>
@@ -346,36 +361,56 @@
         <div class="hero-image-side">
             <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Authentic Moroccan feast">
         </div>
-        <div class="hero-text-side">
-            <h1>WELCOME TO MOROCCAN TASTE</h1>
-            <p>Experience authentic North African flavours in the heart of Hounslow. From slow-cooked tagines to fragrant couscous, fresh pastries, and traditional mint tea — all halal and made with love.</p>
-            <a href="#menu" class="order-btn">DISCOVER OUR MENU</a>
+        <div class="hero-text-side lang-content">
+            <h1 data-en="WELCOME TO MOROCCAN TASTE" data-ar="مرحبا بكم في المذاق المغربي" data-fr="BIENVENUE CHEZ MOROCCAN TASTE">WELCOME TO MOROCCAN TASTE</h1>
+            <p data-en="Experience authentic North African flavours in the heart of Hounslow. From slow-cooked tagines to fragrant couscous, fresh pastries, and traditional mint tea — all halal and made with love." 
+               data-ar="تذوق النكهات المغربية الأصيلة في قلب هونسلو. من الطواجن المطهية ببطء إلى الكسكس العطري، والمعجنات الطازجة، والشاي المغربي التقليدي — كل الأطباق حلال ومُعدة بحب."
+               data-fr="Découvrez les saveurs authentiques d'Afrique du Nord au cœur de Hounslow. Des tagines mijotés aux couscous parfumés, pâtisseries fraîches et thé à la menthe traditionnel — tout halal et préparé avec amour.">
+               Experience authentic North African flavours in the heart of Hounslow. From slow-cooked tagines to fragrant couscous, fresh pastries, and traditional mint tea — all halal and made with love.
+            </p>
+            <a href="#menu" class="order-btn" data-en="DISCOVER OUR MENU" data-ar="اكتشف قائمتنا" data-fr="DÉCOUVRIR NOTRE MENU">DISCOVER OUR MENU</a>
         </div>
     </section>
 
     <section id="menu" class="menu-section">
         <div class="container">
-            <h2>Our Signature Dishes</h2>
+            <h2 class="lang-content" data-en="Our Signature Dishes" data-ar="أطباقنا المميزة" data-fr="Nos Plats Signature">Our Signature Dishes</h2>
             <div class="menu-grid">
                 <div class="dish">
                     <img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?ixlib=rb-4.0.3&auto=format&fit=crop&w=1420&q=80" alt="Chicken Tagine">
-                    <h3>Chicken Tagine</h3>
-                    <p>Slow-cooked with preserved lemons, olives, and aromatic spices</p>
+                    <h3 class="lang-content" data-en="Chicken Tagine" data-ar="طاجين الدجاج" data-fr="Tagine de Poulet">Chicken Tagine</h3>
+                    <p class="lang-content" data-en="Slow-cooked with preserved lemons, olives, and aromatic spices" 
+                       data-ar="مطهو ببطء مع الليمون المخلل والزيتون والتوابل العطرية"
+                       data-fr="Mijoté avec citrons confits, olives et épices aromatiques">
+                       Slow-cooked with preserved lemons, olives, and aromatic spices
+                    </p>
                 </div>
                 <div class="dish">
                     <img src="https://images.unsplash.com/photo-1628277592374-2e31b9c734e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" alt="Vegetable Couscous">
-                    <h3>Seven Vegetable Couscous</h3>
-                    <p>Fluffy couscous with seasonal vegetables and fragrant broth</p>
+                    <h3 class="lang-content" data-en="Seven Vegetable Couscous" data-ar="كسكس بالسبع خضروات" data-fr="Couscous aux Sept Légumes">Seven Vegetable Couscous</h3>
+                    <p class="lang-content" data-en="Fluffy couscous with seasonal vegetables and fragrant broth" 
+                       data-ar="كسكس رقيق مع خضروات الموسم ومرق عطري"
+                       data-fr="Couscous moelleux avec légumes de saison et bouillon parfumé">
+                       Fluffy couscous with seasonal vegetables and fragrant broth
+                    </p>
                 </div>
                 <div class="dish">
                     <img src="https://images.unsplash.com/photo-1633458453297-4a1fe2f01f76?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" alt="Lamb Kefta Tagine">
-                    <h3>Lamb Kefta Tagine</h3>
-                    <p>Spiced meatballs in rich tomato sauce, topped with egg</p>
+                    <h3 class="lang-content" data-en="Lamb Kefta Tagine" data-ar="طاجين الكفتة باللحم" data-fr="Tagine Kefta d'Agneau">Lamb Kefta Tagine</h3>
+                    <p class="lang-content" data-en="Spiced meatballs in rich tomato sauce, topped with egg" 
+                       data-ar="كرات اللحم الغنية بالتوابل في صلصة طماطم غنية، مغطاة بالبيض"
+                       data-fr="Boulettes d'agneau épicées dans une sauce tomate riche, surmontées d'œuf">
+                       Spiced meatballs in rich tomato sauce, topped with egg
+                    </p>
                 </div>
                 <div class="dish">
                     <img src="https://images.unsplash.com/photo-1556878343-9b2b4d2b3d4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" alt="Mint Tea & Pastries">
-                    <h3>Mint Tea & Pastries</h3>
-                    <p>Freshly brewed Moroccan mint tea with handmade sweets</p>
+                    <h3 class="lang-content" data-en="Mint Tea & Pastries" data-ar="شاي النعناع والمعجنات" data-fr="Thé à la Menthe & Pâtisseries">Mint Tea & Pastries</h3>
+                    <p class="lang-content" data-en="Freshly brewed Moroccan mint tea with handmade sweets" 
+                       data-ar="شاي النعناع المغربي الطازج مع الحلويات المصنوعة يدوياً"
+                       data-fr="Thé à la menthe marocain fraîchement infusé avec des douceurs artisanales">
+                       Freshly brewed Moroccan mint tea with handmade sweets
+                    </p>
                 </div>
             </div>
         </div>
@@ -385,15 +420,15 @@
         <div class="container">
             <div class="map-split">
                 <div class="details-side">
-                    <h2>Come Find Us</h2>
-                    <p><strong>Address:</strong><br>791 London Rd, Hounslow TW3 1RS<br>United Kingdom</p>
-                    <p><strong>Phone:</strong><br><a href="tel:+442036014073" class="phone-link">020 3601 4073</a></p>
-                    <p><strong>Email:</strong><br>info@moroccantaste.co.uk</p>
-                    <p><strong>Opening Hours:</strong><br>Monday – Sunday<br>10:00 AM – 10:00 PM</p>
+                    <h2 class="lang-content" data-en="Come Find Us" data-ar="تعالى وجدنا" data-fr="Venez Nous Trouver">Come Find Us</h2>
+                    <p><strong data-en="Address:" data-ar="العنوان:" data-fr="Adresse :">Address:</strong><br>791 London Rd, Hounslow TW3 1RS<br>United Kingdom</p>
+                    <p><strong data-en="Phone:" data-ar="الهاتف:" data-fr="Téléphone :">Phone:</strong><br><a href="tel:+442036014073" class="phone-link">020 3601 4073</a></p>
+                    <p><strong data-en="Email:" data-ar="البريد الإلكتروني:" data-fr="Email :">Email:</strong><br>info@moroccantaste.co.uk</p>
+                    <p><strong data-en="Opening Hours:" data-ar="ساعات العمل:" data-fr="Horaires d'ouverture :">Opening Hours:</strong><br>Monday – Sunday<br>10:00 AM – 10:00 PM</p>
                 </div>
                 <div class="map-side">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19879.000000000004!2d-0.378123!3d51.468456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4876089b8c1b0b0b%3A0x9b7f0f0f0f0f0f0f!2s791%20London%20Rd%2C%20Hounslow%20TW3%201RS!5e0!3m2!1sen!2suk!4v1730000000000&z=12" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=791+London+Rd,+Hounslow+TW3+1RS,+UK" target="_blank" class="find-us-btn">COME FIND US</a>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=791+London+Rd,+Hounslow+TW3+1RS,+UK" target="_blank" class="find-us-btn lang-content" data-en="COME FIND US" data-ar="تعالى وجدنا" data-fr="VENEZ NOUS TROUVER">COME FIND US</a>
                 </div>
             </div>
         </div>
@@ -406,12 +441,12 @@
                 <a href="#">📷</a>
                 <a href="#">✆</a>
             </div>
-            <p>&copy; 2025 Moroccan Taste. All rights reserved.</p>
+            <p class="lang-content" data-en="&copy; 2025 Moroccan Taste. All rights reserved." data-ar="© 2025 المذاق المغربي. جميع الحقوق محفوظة." data-fr="© 2025 Moroccan Taste. Tous droits réservés.">&copy; 2025 Moroccan Taste. All rights reserved.</p>
             <div class="footer-links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Cookie Policy</a>
-                <a href="#">Accessibility</a>
+                <a href="#" data-en="Terms of Service" data-ar="شروط الخدمة" data-fr="Conditions d'utilisation">Terms of Service</a>
+                <a href="#" data-en="Privacy Policy" data-ar="سياسة الخصوصية" data-fr="Politique de confidentialité">Privacy Policy</a>
+                <a href="#" data-en="Cookie Policy" data-ar="سياسة الكوكيز" data-fr="Politique des cookies">Cookie Policy</a>
+                <a href="#" data-en="Accessibility" data-ar="إمكانية الوصول" data-fr="Accessibilité">Accessibility</a>
             </div>
         </div>
     </footer>
@@ -419,6 +454,56 @@
     <a href="#" class="back-to-top" id="backToTop">↑</a>
 
     <script>
+        // Language data
+        const translations = {
+            en: {
+                dir: 'ltr',
+                current: 'EN'
+            },
+            ar: {
+                dir: 'rtl',
+                current: 'AR'
+            },
+            fr: {
+                dir: 'ltr',
+                current: 'FR'
+            }
+        };
+
+        // Switch language function
+        function switchLanguage(lang) {
+            // Fade out content
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.add('fade');
+            });
+
+            setTimeout(() => {
+                // Update direction
+                document.documentElement.dir = translations[lang].dir;
+                document.documentElement.lang = lang;
+
+                // Update current language display
+                document.getElementById('currentLang').textContent = translations[lang].current;
+
+                // Update all translatable text
+                document.querySelectorAll('[data-en]').forEach(el => {
+                    el.textContent = el.dataset[lang] || el.dataset['en'];
+                });
+
+                // Special handling for logo (Arabic always visible, English hidden in Arabic mode)
+                if (lang === 'ar') {
+                    document.querySelector('.logo-en').style.display = 'none';
+                } else {
+                    document.querySelector('.logo-en').style.display = 'block';
+                }
+
+                // Fade back in
+                document.querySelectorAll('.lang-content').forEach(el => {
+                    el.classList.remove('fade');
+                });
+            }, 400);
+        }
+
         // Mobile menu toggle
         function toggleMenu() {
             document.getElementById('nav-menu').classList.toggle('active');
